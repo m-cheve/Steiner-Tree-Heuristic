@@ -10,6 +10,9 @@ module type MyNode =
 
 module MyNode =
   struct
+    (** x: the x coordinate
+        y: the y coordinate
+        pr: the node is a relay point [true] or not [false] *)
     type t = (float * float * bool)
 
     let compare (x1, y1, pr1) (x2, y2, pr2) =
@@ -56,6 +59,7 @@ module Make(O:MyNode) =
     module NodeSet = Set.Make(O)
     module NodeMap = Map.Make(O)
     type node = NodeSet.elt
+                 (* the weight of the graph * the graph *)
     type graph = (float * NodeSet.t NodeMap.t)
 
     let empty = (0., NodeMap.empty)
