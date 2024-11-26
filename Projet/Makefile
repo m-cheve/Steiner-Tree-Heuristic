@@ -1,10 +1,11 @@
 .PHONY: all clean
+INPUT=./test_input
 
 all: tests.cmo graph.cmo main.cmo
 	/pub/FISE_PRFO23/ocamlc.sh graph.cmo tests.cmo main.cmo -o main
 
 test: all
-	./main
+	cat $(INPUT) | ./main
 
 %.cmi: %.mli
 	/pub/FISE_PRFO23/ocamlc.sh -c $< -o $@
