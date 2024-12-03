@@ -194,4 +194,14 @@ module Make(O:MyNodeType) =
         let new_node = O.create_node x y false in
         create_graph_aux list (NodeSet.add new_node NodeSet.empty)
 
+    (**
+      @requires, ()
+      @ensures [create_barycentre_pr n1 n2 n3] returns a relay point node that is at the
+                barycentre of [n1] [n2] and [n3]
+      @raises, ()
+    *)
+    let create_barycentre_pr n1 n2 n3 =
+      let x = ((O.x_value n1) +. (O.x_value n2) +. (O.x_value n3)) /. 3. in
+      let y = ((O.y_value n1) +. (O.y_value n2) +. (O.y_value n3)) /. 3. in
+      O.create_node x y true
   end
