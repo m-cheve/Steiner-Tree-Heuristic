@@ -18,6 +18,8 @@ module type MyNode =
 
     val is_pr : t -> bool
 
+    val create_node : float -> float -> bool -> t
+
     (**
       @requires, ()
       @ensures [weight n1 n2] returns the weight of the edge linking [n1] and [n2]

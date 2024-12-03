@@ -9,6 +9,8 @@ module type MyNode =
     val y_value : t -> float
     val is_pr : t -> bool
 
+    val create_node : float -> float -> bool -> t
+
     val weight : t -> t -> float
   end
 
@@ -32,6 +34,8 @@ module MyNode =
     let x_value (x, y, pr) = x
     let y_value (x, y, pr) = y
     let is_pr (x, y, pr) = pr
+
+    let create_node x y pr = (x, y, pr)
 
     let weight (x1, y1, pr1) (x2, y2, pr2) =
       Float.sqrt ((x2 -. x1) *. (x2 -. x1) +. (y2 -. y1) *. (y2 -. y1))
