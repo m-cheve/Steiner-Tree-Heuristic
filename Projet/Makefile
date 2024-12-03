@@ -1,5 +1,5 @@
 .PHONY: all clean
-INPUT=./test_input
+INPUT=./input
 ARGFILE=./argfile.ignore
 
 all: tests.cmo graph.cmo main.cmo
