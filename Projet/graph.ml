@@ -204,4 +204,27 @@ module Make(O:MyNodeType) =
       let x = ((O.x_value n1) +. (O.x_value n2) +. (O.x_value n3)) /. 3. in
       let y = ((O.y_value n1) +. (O.y_value n2) +. (O.y_value n3)) /. 3. in
       O.create_node x y true
+
+    (**
+      @requires [src] is linked to [dst1] and [dst2]
+                but [dst1] is not linked to [dst2]
+      @ensures [place_pr g src dst1 dst2] remove edges between [src] and [dst1]
+                but also between [src] and [dst2].
+                Then the program creates a relay point and link it to [src], [dst1] and [dst2]
+      @raises, ()
+    *)
+    let place_pr g src dst1 dst2 =
+      (* As the graph is oriented, we remove every possible edge between src, dst1 and dst2*)
+      let g1 = remove_edge src dst1 g in
+      let g2 = remove_edge dst1 src g1 in
+      let g3 = remove_edge src dst2 g2 in
+      let g4 = remove_edge dst2 src g3 in
+
+      (* Create the barycenter *)
+      let new_pr = create_barycentre_pr src dst1 dst2 in
+
+      (* Link the barycentre to src, dst1 and dst2 *)
+      let g5 = add_edge new_pr src g4 in
+      let g6 = add_edge new_pr dst1 g5 in
+      add_edge new_pr dst2 g6
   end
