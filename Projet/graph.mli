@@ -12,6 +12,12 @@ module type MyNode =
     *)
     val compare : t -> t -> int
 
+    val x_value : t -> float
+
+    val y_value : t -> float
+
+    val is_pr : t -> bool
+
     (**
       @requires, ()
       @ensures [weight n1 n2] returns the weight of the edge linking [n1] and [n2]

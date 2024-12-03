@@ -5,6 +5,10 @@ module type MyNode =
 
     val compare : t -> t -> int
 
+    val x_value : t -> float
+    val y_value : t -> float
+    val is_pr : t -> bool
+
     val weight : t -> t -> float
   end
 
@@ -24,6 +28,10 @@ module MyNode =
       else if pr1 = pr2 then 0
       else
         1
+
+    let x_value (x, y, pr) = x
+    let y_value (x, y, pr) = y
+    let is_pr (x, y, pr) = pr
 
     let weight (x1, y1, pr1) (x2, y2, pr2) =
       Float.sqrt ((x2 -. x1) *. (x2 -. x1) +. (y2 -. y1) *. (y2 -. y1))
