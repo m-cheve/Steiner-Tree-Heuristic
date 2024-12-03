@@ -82,7 +82,7 @@ let read () =
 
 (* Program *)
 module G = Graph.Make(Graph.MyNode)
-let coords_list = read_coords 9;;
+let coords_list = read ();;
 let result = G.to_list (G.create_graph coords_list);;
 let _ = draw_steiner (500,500) coords_list result;;
 
