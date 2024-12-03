@@ -66,6 +66,8 @@ module type Graph =
     val fold_edge : (node -> node -> 'value -> 'value) -> graph -> 'value -> 'value
 
     val to_list : graph -> ((float * float) * (float * float)) list
+
+    val create_graph : (float * float) list -> graph
 end
 
 module Make(O:MyNode) =
@@ -167,4 +169,29 @@ module Make(O:MyNode) =
       )
       g
       []
+
+    let create_graph list =
+      (** [set] is used to store elements that are already in the graph *)
+      let rec create_graph_aux l set = match l with
+        |[] -> empty
+        |[(x, y)] ->
+          add_node (O.create_node x y false) empty
+        |(x1, y1)::(x2, y2)::t ->
+          (** As we want to connect every node without creating a cycle,
+              We check if [dst] is already in the graph *)
+          let src = O.create_node x1 y1 false in
+          let dst = O.create_node x2 y2 false in
+          if NodeSet.mem dst set then (* if it is, we skip this node *)
+            create_graph_aux ((x1,y1)::t) set
+          else
+            (* if it isn't we add it to the graph and try to connect it with other nodes *)
+            let g = create_graph_aux ((x2,y2)::t) (NodeSet.add dst set) in
+            add_edge src dst g in
+      match list with
+      |[] -> empty
+      |(x, y)::t ->
+        (** Adding the first element to the set as [create_graph_aux] doesn't do it *)
+        let new_node = O.create_node x y false in
+        create_graph_aux list (NodeSet.add new_node NodeSet.empty)
+
   end

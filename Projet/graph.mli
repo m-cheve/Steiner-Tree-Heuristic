@@ -134,6 +134,16 @@ module type Graph =
       @raises, ()
     *)
     val to_list : graph -> ((float * float) * (float * float)) list
+
+    (**
+      @requires the list to contain positive values
+      @ensures [create_graph l] add every node contain in [l]
+                where an element of [l] has the form [(x, y)]
+                it also create an edge between the element [(x, y)]
+                and its successor in the list in order to create a connex graph
+      @raises, ()
+    *)
+    val create_graph : (float * float) list -> graph
 end
 
 module Make(X:MyNode) : Graph with type node = X.t
