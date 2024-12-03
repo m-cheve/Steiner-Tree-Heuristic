@@ -1,4 +1,4 @@
-module type MyNode =
+module type MyNodeType =
   sig
     type t
 
@@ -146,4 +146,6 @@ module type Graph =
     val create_graph : (float * float) list -> graph
 end
 
-module Make(X:MyNode) : Graph with type node = X.t
+module MyNode : MyNodeType
+
+module Make(X:MyNodeType) : Graph with type node = X.t

@@ -20,3 +20,4 @@ clean:
 
 graph.cmo: graph.cmi
 tests.cmo: graph.cmi
+main.cmo: graph.cmi

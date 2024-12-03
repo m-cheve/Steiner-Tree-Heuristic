@@ -78,5 +78,11 @@ let read_coords =
     fun n -> aux [] n
 
 (* Program *)
+module G = Graph.Make(Graph.MyNode)
+let coords_list = read_coords 9;;
+let result = G.to_list (G.create_graph coords_list);;
+let _ = draw_steiner (500,500) coords_list result;;
 
+(*
 let _ = draw_steiner (500,500) (read_coords 9) (((2.,1.),(2.,2.))::((0.,1.),(2.,0.))::((1.,1.),(0.,2.))::((1.,1.),(2.,2.))::((1.,1.),(1.,2.))::((0.,0.),(0.,1.))::((0.,0.),(1.,1.))::((1.,1.),(1.,0.))::[]);;
+*)

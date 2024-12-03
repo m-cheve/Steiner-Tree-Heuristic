@@ -1,5 +1,5 @@
 (* Node OrderedType *)
-module type MyNode =
+module type MyNodeType =
   sig
     type t
 
@@ -70,7 +70,7 @@ module type Graph =
     val create_graph : (float * float) list -> graph
 end
 
-module Make(O:MyNode) =
+module Make(O:MyNodeType) =
   struct
     module NodeSet = Set.Make(O)
     module NodeMap = Map.Make(O)
