@@ -77,6 +77,9 @@ let read_coords =
     in
     fun n -> aux [] n
 
+let read () =
+    Scanf.scanf "%d\n" read_coords
+
 (* Program *)
 module G = Graph.Make(Graph.MyNode)
 let coords_list = read_coords 9;;
