@@ -125,6 +125,13 @@ module type Graph =
       @raises, ()
     *)
     val fold_edge : (node -> node -> 'value -> 'value) -> graph -> 'value -> 'value
+
+    (**
+      @requires, ()
+      @ensures [to_list g] convert [g] to a list of edges
+      @raises, ()
+    *)
+    val to_list : graph -> ((float * float) * (float * float)) list
 end
 
 module Make(X:MyNode) : Graph with type node = X.t

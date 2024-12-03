@@ -60,6 +60,8 @@ module type Graph =
 
     val fold_node : (node -> 'value -> 'value) -> graph -> 'value -> 'value
     val fold_edge : (node -> node -> 'value -> 'value) -> graph -> 'value -> 'value
+
+    val to_list : graph -> ((float * float) * (float * float)) list
 end
 
 module Make(O:MyNode) =
@@ -153,4 +155,12 @@ module Make(O:MyNode) =
       )
       g
       v0
+
+    let to_list g =
+      fold_edge (
+        fun src dst acc ->
+          ((O.x_value src, O.y_value src),(O.x_value dst, O.y_value dst))::acc
+      )
+      g
+      []
   end
