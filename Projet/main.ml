@@ -29,29 +29,29 @@ let draw (sx,sy) pts sol =
 
 
 let draw_steiner (sx,sy) pts sol =
-    let ps0 = List.map (fun (x,y) -> (float_of_int x, float_of_int y)) pts in
+    let ps0 = pts in
     let ps  = List.fold_left (fun acc (c1,c2) -> c1::c2::acc) ps0 sol in
     let xm  = List.fold_left (fun acc (x,_) -> min acc x) infinity ps in
     let xM  = List.fold_left (fun acc (x,_) -> max acc x) neg_infinity ps in
     let ym  = List.fold_left (fun acc (_,y) -> min acc y) infinity ps in
     let yM  = List.fold_left (fun acc (_,y) -> max acc y) neg_infinity ps in
-    let margin  = 10 in
-    let _ = if sx <= 2 * margin
+    let margin  = 10.0 in
+    let sxf = float_of_int sx in
+    let syf = float_of_int sy in
+    let _ = if sxf <= 2.0 *. margin
             then failwith "[draw_steiner] width must be more than 20px."
             else ()
     in
-    let _ = if sy <= 2 * margin
+    let _ = if syf <= 2.0 *. margin
             then failwith "[draw_steiner] height must be more than 20px."
             else ()
     in
-    let shift_x = float_of_int margin -. xm in
-    let shift_y = float_of_int margin -. ym in
     let eps     = 1e-6 in
-    let zoom_x  = max eps (float_of_int (sx - 2 * margin) /. (max eps (xM -. xm))) in
-    let zoom_y  = max eps (float_of_int (sy - 2 * margin) /. (max eps (yM -. ym))) in
+    let zoom_x  = max eps ((sxf -. 2.0 *. margin) /. (max eps (xM -. xm))) in
+    let zoom_y  = max eps ((syf -. 2.0 *. margin) /. (max eps (yM -. ym))) in
     let adjust (x,y) =
-        ( int_of_float (shift_x +. zoom_x *. x)
-        , int_of_float (shift_y +. zoom_y *. y)
+        ( int_of_float ( margin +. zoom_x *. (x-.xm))
+        , int_of_float ( margin +. zoom_y *. (y-.ym))
         )
     in
     let pts' = List.map adjust ps0 in
@@ -61,21 +61,21 @@ let draw_steiner (sx,sy) pts sol =
 
 (* Read Input *)
 let dump_coord (x,y) =
-  Printf.printf "(%d,%d) " x y
+    Printf.printf "(%f,%f) " x y
 
 let dump l =
-  let _ = Printf.printf "{ " in
-  let _ = List.iter dump_coord l in
-  Printf.printf "}\n%!"
+    let _ = Printf.printf "{ " in
+    let _ = List.iter dump_coord l in
+    Printf.printf "}\n%!"
 
 let read_coords =
-  let rec aux acc n =
-      if n = 0
-      then List.rev acc
-      else let c = Scanf.scanf "%d %d\n" (fun x y -> (x,y))
-            in aux (c::acc) (n-1)
-  in
-  fun n -> aux [] n
+    let rec aux acc n =
+        if n = 0
+        then List.rev acc
+        else let c = Scanf.scanf "%f %f\n" (fun x y -> (x,y))
+             in aux (c::acc) (n-1)
+    in
+    fun n -> aux [] n
 
 (* Program *)
 
