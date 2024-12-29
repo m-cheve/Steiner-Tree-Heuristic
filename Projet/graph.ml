@@ -299,4 +299,17 @@ module Make(O:MyNodeType) =
         (false, n1) in
       result
 
+    (**
+      @requires [g] possède au moins 3 sommets
+      @ensures [find_triangle graph] renvoie un triplet de sommets qui forment un triangle
+      @raises, ()
+    *)
+    let find_triangle (p,g) =
+      if NodeMap.cardinal g < 3 then
+        failwith "Not enough nodes in the graph"
+      else
+      let n1 = pick_node (p,g) in
+      let n2 = if NodeSet.cardinal (succs n1 (p,g)) = 0 then find_parent (p,g) n1 n1 else pick_succs n1 (p,g) in
+      let n3 = if NodeSet.cardinal (succs n2 (p,g)) = 0 then find_parent (p,g) n1 n2 else pick_succs n2 (p,g) in
+      (n1, n2, n3)
   end
