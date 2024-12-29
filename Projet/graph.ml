@@ -272,4 +272,31 @@ module Make(O:MyNodeType) =
         succs
         (false, NodeSet.choose succs, NodeSet.cardinal succs) in
       result
+
+    (**
+      @requires [g] possède au moins 3 sommets
+      @ensures [find_parent graph] renvoie un sommet qui est le parent de [n1] ou [n2]
+                et qui est différent de [n1] et [n2]
+      @raises, ()
+    *)
+    let find_parent (p,g) n1 n2 =
+      let _, result =
+        fold_node (
+          fun n' (is_chosen, node) ->
+            if is_chosen then
+              (true, node)
+            else
+              if n' = n1 || n' = n2 then
+                (false, node)
+              else
+                let succs_n = succs n' (p,g) in
+                if NodeSet.mem n1 succs_n || NodeSet.mem n2 succs_n then
+                  (true, n')
+                else
+                  (false, node)
+        )
+        (p,g)
+        (false, n1) in
+      result
+
   end
