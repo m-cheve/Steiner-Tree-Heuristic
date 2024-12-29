@@ -322,4 +322,19 @@ module Make(O:MyNodeType) =
       let n1, n2, n3 = find_triangle (p,g) in
       place_pr (p,g) n1 n2 n3
 
+    (**
+      @requires ()
+      @ensures [get_pr_list graph] retourne les points relais du graphe sous forme de liste
+      @raises, ()
+    *)
+    let get_pr_list (p,g) =
+      fold_node (
+        fun n acc ->
+          if O.is_pr n then
+            n::acc
+          else
+            acc
+      )
+      (p,g)
+      []
   end
