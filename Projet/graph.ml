@@ -312,4 +312,14 @@ module Make(O:MyNodeType) =
       let n2 = if NodeSet.cardinal (succs n1 (p,g)) = 0 then find_parent (p,g) n1 n1 else pick_succs n1 (p,g) in
       let n3 = if NodeSet.cardinal (succs n2 (p,g)) = 0 then find_parent (p,g) n1 n2 else pick_succs n2 (p,g) in
       (n1, n2, n3)
+
+    (**
+      @requires [g] possède au moins 3 sommets
+      @ensures [action_create_pr graph] crée un point relais entre 3 sommets et ajoute celui au graphe
+      @raises, ()
+    *)
+    let action_create_pr (p,g) =
+      let n1, n2, n3 = find_triangle (p,g) in
+      place_pr (p,g) n1 n2 n3
+
   end
