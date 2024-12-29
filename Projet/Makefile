@@ -1,9 +1,12 @@
 .PHONY: all clean
 INPUT=./input
 ARGFILE=./argfile.ignore
+OCAMLC=ocamlfind ocamlc
+OCAMLFLAGS=-package graphics -linkpkg
+# OCAMLC=/pub/FISE_PRFO23/ocamlc.sh
 
 all: tests.cmo graph.cmo main.cmo
-	/pub/FISE_PRFO23/ocamlc.sh graph.cmo tests.cmo main.cmo -o main
+	$(OCAMLC) $(OCAMLFLAGS) graph.cmo tests.cmo main.cmo -o main
 
 test: all
 	wc -l < $(INPUT) > $(ARGFILE)
@@ -11,15 +14,13 @@ test: all
 	cat $(ARGFILE) | ./main
 
 %.cmi: %.mli
-	/pub/FISE_PRFO23/ocamlc.sh -c $< -o $@
+	$(OCAMLC) $(OCAMLFLAGS) -c $< -o $@
 
 %.cmo: %.ml
-	/pub/FISE_PRFO23/ocamlc.sh -c $< -o $@
+	$(OCAMLC) $(OCAMLFLAGS) -c $< -o $@
 
 clean:
 	rm -fv *~ *.cm[io] main *.ignore
-
-
 
 graph.cmo: graph.cmi
 tests.cmo: graph.cmi
