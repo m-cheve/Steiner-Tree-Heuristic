@@ -227,4 +227,49 @@ module Make(O:MyNodeType) =
       let g5 = add_edge new_pr src g4 in
       let g6 = add_edge new_pr dst1 g5 in
       add_edge new_pr dst2 g6
+
+    (**
+      @requires [g] possède au moins un sommet
+      @ensures [pick_node graph] renvoie un sommet aléatoire du graphe
+      @raises, ()
+    *)
+    let pick_node (p,g) =
+      let _, result, _ =
+        fold_node (
+          fun n (is_chosen, node, number_of_nodes) ->
+            if is_chosen then
+              (true, node, number_of_nodes)
+            else
+              let result = Random.int number_of_nodes in
+              if result = 0 then
+                (true, n, number_of_nodes - 1)
+              else
+                (false, node, number_of_nodes - 1)
+        )
+        (p,g)
+        (false, fst (NodeMap.choose g), NodeMap.cardinal g) in
+      result
+
+    (**
+      @requires [n] possède au moins un successeur
+      @ensures [pick_succs n graph] renvoie un successeur aléatoire de [n]
+      @raises, ()
+    *)
+    let pick_succs n (p,g) =
+      let succs = succs n (p,g) in
+      let _, result, _ =
+        NodeSet.fold (
+          fun n (is_chosen, node, number_of_nodes) ->
+            if is_chosen then
+              (true, node, number_of_nodes)
+            else
+              let result = Random.int number_of_nodes in
+              if result = 0 then
+                (true, n, number_of_nodes - 1)
+              else
+                (false, node, number_of_nodes - 1)
+        )
+        succs
+        (false, NodeSet.choose succs, NodeSet.cardinal succs) in
+      result
   end
