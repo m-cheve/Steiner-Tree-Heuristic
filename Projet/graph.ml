@@ -409,4 +409,41 @@ module Make(O:MyNodeType) =
       let pr_list = get_pr_list (p,g) in
       let pr = pick_rancom_element_from_list pr_list in
       move_pr (p,g) pr
+
+    (**
+      @requires [pr] is a relay point in [g]
+      @ensures [delete_pr g pr] deletes a [pr] from [g] and links its neighbors together
+      @raises, ()
+    *)
+    let delete_pr g pr =
+      let parents = find_parents g pr in
+      let succs_pr = succs pr g in
+
+      let g1 = NodeSet.fold (
+        fun parent acc ->
+          let g' = remove_edge parent pr acc in
+          g'
+      )
+      parents
+      g in
+
+      let g2 = NodeSet.fold (
+        fun succ acc ->
+          let g' = remove_edge pr succ acc in
+          g'
+      )
+      succs_pr
+      g1 in
+
+      let g3 = remove_node pr g2 in
+
+      let neighbors = NodeSet.union parents succs_pr in
+      let fused_node = NodeSet.choose neighbors in
+
+      NodeSet.fold (
+        fun neighbor acc ->
+          add_edge neighbor fused_node acc
+      )
+      (NodeSet.remove fused_node neighbors)
+      g3
   end
