@@ -219,14 +219,16 @@ module Make(O:MyNodeType) =
       let g2 = remove_edge dst1 src g1 in
       let g3 = remove_edge src dst2 g2 in
       let g4 = remove_edge dst2 src g3 in
+      let g5 = remove_edge dst1 dst2 g4 in
+      let g6 = remove_edge dst2 dst1 g5 in
 
       (* Create the barycenter *)
       let new_pr = create_barycentre_pr src dst1 dst2 in
 
       (* Link the barycentre to src, dst1 and dst2 *)
-      let g5 = add_edge new_pr src g4 in
-      let g6 = add_edge new_pr dst1 g5 in
-      add_edge new_pr dst2 g6
+      let g7 = add_edge new_pr src g6 in
+      let g8 = add_edge new_pr dst1 g7 in
+      add_edge new_pr dst2 g8
 
     (**
       @requires [g] possède au moins un sommet
