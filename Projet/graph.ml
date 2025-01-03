@@ -446,4 +446,14 @@ module Make(O:MyNodeType) =
       )
       (NodeSet.remove fused_node neighbors)
       g3
+
+    (**
+      @requires [g] has at least one relay point
+      @ensures [action_delete_pr g] deletes a relay point in [g] and links its neighbors together
+      @raises, ()
+    *)
+    let action_delete_pr g =
+      let pr_list = get_pr_list g in
+      let pr = pick_rancom_element_from_list pr_list in
+      delete_pr g pr
   end
