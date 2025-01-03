@@ -5,8 +5,8 @@ OCAMLC=ocamlfind ocamlc
 OCAMLFLAGS=-package graphics -linkpkg
 # OCAMLC=/pub/FISE_PRFO23/ocamlc.sh
 
-all: graph.cmo main.cmo
-	$(OCAMLC) $(OCAMLFLAGS) graph.cmo main.cmo -o main
+all: graph.cmo display.cmo read.cmo main.cmo
+	$(OCAMLC) $(OCAMLFLAGS) graph.cmo display.cmo read.cmo main.cmo -o main
 
 exec: all
 	wc -l < $(INPUT) > $(ARGFILE)
