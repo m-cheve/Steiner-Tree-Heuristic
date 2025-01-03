@@ -351,4 +351,19 @@ module Make(O:MyNodeType) =
       else
         List.nth l (Random.int (List.length l))
 
+    (**
+      @requires ()
+      @ensures [find_parents (p,g) n] returns the set of parents of [n] in [g]
+      @raises, ()
+    *)
+    let find_parents (p,g) n =
+      fold_node (
+        fun n' acc ->
+          if NodeSet.mem n (succs n' (p,g)) then
+            NodeSet.add n' acc
+          else
+            acc
+      )
+      (p,g)
+      NodeSet.empty
   end
