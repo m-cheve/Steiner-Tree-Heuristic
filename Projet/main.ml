@@ -81,7 +81,10 @@ let read () =
     Scanf.scanf "%d\n" read_coords
 
 (* Program *)
-module G = Graph.Make(Graph.MyNode)
+module G = Graph.Make(Graph.MyNode);;
+
+Random.self_init ();;
+
 let coords_list = read ();;
 let result = G.to_list (G.create_graph coords_list);;
 let _ = draw_steiner (500,500) coords_list result;;
