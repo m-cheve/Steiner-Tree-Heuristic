@@ -85,10 +85,16 @@ module G = Graph.Make(Graph.MyNode);;
 
 Random.self_init ();;
 
-let coords_list = read ();;
-let result = G.to_list (G.create_graph coords_list);;
-let _ = draw_steiner (500,500) coords_list result;;
+(* The Number of iteration used to create the steiner graph *)
+let number_of_iterations = 100000;;
 
-(*
-let _ = draw_steiner (500,500) (read_coords 9) (((2.,1.),(2.,2.))::((0.,1.),(2.,0.))::((1.,1.),(0.,2.))::((1.,1.),(2.,2.))::((1.,1.),(1.,2.))::((0.,0.),(0.,1.))::((0.,0.),(1.,1.))::((1.,1.),(1.,0.))::[]);;
-*)
+let coords_list = read ();;
+
+let steiner () =
+    let graph = G.create_graph coords_list in
+    let result = G.steiner graph number_of_iterations in
+    G.to_list result
+
+let result = steiner ();;
+let _ = draw_steiner (700,700) coords_list result;;
+()
