@@ -366,4 +366,35 @@ module Make(O:MyNodeType) =
       )
       (p,g)
       NodeSet.empty
+
+
+    (**
+      @requires [pr] is a relay point in [g]
+      @ensures [move_pr g pr] moves the relay point [pr] to a random position
+      @raises, ()
+    *)
+    let move_pr g pr =
+      let parents = find_parents g pr in
+      let succs_pr = succs pr g in
+
+      let x1 = O.x_value pr +. if  Random.bool () then Random.float 1. else -1. *. Random.float 1. in
+      let y1 = O.y_value pr +. if  Random.bool () then Random.float 1. else -1. *. Random.float 1. in
+
+      let new_pr = O.create_node x1 y1 true in
+
+      let g1 = NodeSet.fold (
+        fun parent acc ->
+          let g' = remove_edge parent pr acc in
+          add_edge parent new_pr g'
+      )
+      parents
+      g in
+
+      NodeSet.fold (
+        fun succ acc ->
+          let g' = remove_edge pr succ acc in
+          add_edge new_pr succ g'
+      )
+      succs_pr
+      g1
   end
