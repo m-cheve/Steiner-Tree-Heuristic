@@ -8,7 +8,7 @@ OCAMLFLAGS=-package graphics -linkpkg
 all: graph.cmo main.cmo
 	$(OCAMLC) $(OCAMLFLAGS) graph.cmo main.cmo -o main
 
-test: all
+exec: all
 	wc -l < $(INPUT) > $(ARGFILE)
 	cat $(INPUT) >> $(ARGFILE)
 	cat $(ARGFILE) | ./main
