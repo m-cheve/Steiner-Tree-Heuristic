@@ -170,29 +170,63 @@ module Make(O:MyNodeType) =
       g
       []
 
+    (**
+      @requires, ()
+      @ensures [create_node_set l] returns a set of nodes created from [l]
+      @raises, ()
+    *)
+    let rec create_node_set l =
+      match l with
+      |[] -> NodeSet.empty
+      |(x, y)::t ->
+        let new_node = O.create_node x y false in
+        NodeSet.add new_node (create_node_set t)
+
+    (**
+      @requires [s] is not empty
+      @ensures [pick_rancom_element_from_set s] returns a random element from [s]
+      @raises, ()
+    *)
+    let pick_rancom_element_from_set s =
+      if NodeSet.cardinal s = 0 then
+        failwith "Empty set"
+      else
+        let _, result, _ = NodeSet.fold (
+          fun n (is_chosen, node, number_of_nodes) ->
+            if is_chosen then
+              (true, node, number_of_nodes)
+            else
+              let result = Random.int number_of_nodes in
+              if result = 0 then
+                (true, n, number_of_nodes - 1)
+              else
+                (false, node, number_of_nodes - 1)
+        )
+        s
+        (false, NodeSet.choose s, NodeSet.cardinal s) in
+
+        result
+
     let create_graph list =
-      (** [set] is used to store elements that are already in the graph *)
-      let rec create_graph_aux l set = match l with
-        |[] -> empty
-        |[(x, y)] ->
-          add_node (O.create_node x y false) empty
-        |(x1, y1)::(x2, y2)::t ->
-          (** As we want to connect every node without creating a cycle,
-              We check if [dst] is already in the graph *)
-          let src = O.create_node x1 y1 false in
-          let dst = O.create_node x2 y2 false in
-          if NodeSet.mem dst set then (* if it is, we skip this node *)
-            create_graph_aux ((x1,y1)::t) set
-          else
-            (* if it isn't we add it to the graph and try to connect it with other nodes *)
-            let g = create_graph_aux ((x2,y2)::t) (NodeSet.add dst set) in
-            add_edge src dst g in
       match list with
       |[] -> empty
-      |(x, y)::t ->
-        (** Adding the first element to the set as [create_graph_aux] doesn't do it *)
-        let new_node = O.create_node x y false in
-        create_graph_aux list (NodeSet.add new_node NodeSet.empty)
+      |_ ->
+        let node_set = create_node_set list in
+        let src1 = pick_rancom_element_from_set node_set in
+        let node_set' = NodeSet.remove src1 node_set in
+        let dst1 = pick_rancom_element_from_set node_set' in
+        let node_set'' = NodeSet.remove dst1 node_set' in
+
+        let rec aux not_connected_set connected_set =
+          if NodeSet.is_empty not_connected_set then
+            empty
+          else
+            let src = pick_rancom_element_from_set connected_set in
+            let dst = pick_rancom_element_from_set not_connected_set in
+            add_edge src dst (aux (NodeSet.remove dst not_connected_set) (NodeSet.add dst connected_set)) in
+
+        let g = aux node_set'' (NodeSet.add dst1 (NodeSet.add src1 NodeSet.empty)) in
+        add_edge src1 dst1 g
 
     (**
       @requires, ()

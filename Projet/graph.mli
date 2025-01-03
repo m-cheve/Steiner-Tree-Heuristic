@@ -139,8 +139,7 @@ module type Graph =
       @requires the list to contain positive values
       @ensures [create_graph l] add every node contain in [l]
                 where an element of [l] has the form [(x, y)]
-                it also create an edge between the element [(x, y)]
-                and its successor in the list in order to create a connex graph
+                and create an edge between them without creating a cycle
       @raises, ()
     *)
     val create_graph : (float * float) list -> graph
