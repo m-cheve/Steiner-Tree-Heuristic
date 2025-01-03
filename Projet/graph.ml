@@ -186,10 +186,10 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [s] is not empty
-      @ensures [pick_rancom_element_from_set s] returns a random element from [s]
+      @ensures [pick_random_element_from_set s] returns a random element from [s]
       @raises, ()
     *)
-    let pick_rancom_element_from_set s =
+    let pick_random_element_from_set s =
       if NodeSet.cardinal s = 0 then
         failwith "Empty set"
       else
@@ -214,17 +214,17 @@ module Make(O:MyNodeType) =
       |[] -> empty
       |_ ->
         let node_set = create_node_set list in
-        let src1 = pick_rancom_element_from_set node_set in
+        let src1 = pick_random_element_from_set node_set in
         let node_set' = NodeSet.remove src1 node_set in
-        let dst1 = pick_rancom_element_from_set node_set' in
+        let dst1 = pick_random_element_from_set node_set' in
         let node_set'' = NodeSet.remove dst1 node_set' in
 
         let rec aux not_connected_set connected_set =
           if NodeSet.is_empty not_connected_set then
             empty
           else
-            let src = pick_rancom_element_from_set connected_set in
-            let dst = pick_rancom_element_from_set not_connected_set in
+            let src = pick_random_element_from_set connected_set in
+            let dst = pick_random_element_from_set not_connected_set in
             add_edge src dst (aux (NodeSet.remove dst not_connected_set) (NodeSet.add dst connected_set)) in
 
         let g = aux node_set'' (NodeSet.add dst1 (NodeSet.add src1 NodeSet.empty)) in
@@ -378,10 +378,10 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [l] is not empty
-      @ensures [pick_rancom_element_from_list l] returns a random element from [l]
+      @ensures [pick_random_element_from_list l] returns a random element from [l]
       @raises, ()
     *)
-    let pick_rancom_element_from_list l =
+    let pick_random_element_from_list l =
       if List.length l = 0 then
         failwith "Empty list"
       else
@@ -443,7 +443,7 @@ module Make(O:MyNodeType) =
     *)
     let action_move_pr g =
       let pr_list = get_pr_list g in
-      let pr = pick_rancom_element_from_list pr_list in
+      let pr = pick_random_element_from_list pr_list in
       move_pr g pr
 
     (**
@@ -490,7 +490,7 @@ module Make(O:MyNodeType) =
     *)
     let action_delete_pr g =
       let pr_list = get_pr_list g in
-      let pr = pick_rancom_element_from_list pr_list in
+      let pr = pick_random_element_from_list pr_list in
       delete_pr g pr
 
     let steiner (p',g') n' =
