@@ -339,4 +339,16 @@ module Make(O:MyNodeType) =
       )
       (p,g)
       []
+
+    (**
+      @requires [l] is not empty
+      @ensures [pick_rancom_element_from_list l] returns a random element from [l]
+      @raises, ()
+    *)
+    let pick_rancom_element_from_list l =
+      if List.length l = 0 then
+        failwith "Empty list"
+      else
+        List.nth l (Random.int (List.length l))
+
   end
