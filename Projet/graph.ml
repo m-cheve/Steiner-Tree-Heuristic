@@ -348,7 +348,13 @@ module Make(O:MyNodeType) =
       else
       let n1 = pick_node (p,g) in
       let n2 = if NodeSet.cardinal (succs n1 (p,g)) = 0 then find_parent (p,g) n1 n1 else pick_succs n1 (p,g) in
-      let n3 = if NodeSet.cardinal (succs n2 (p,g)) = 0 then find_parent (p,g) n1 n2 else pick_succs n2 (p,g) in
+      let n3 = if NodeSet.cardinal (succs n2 (p,g)) = 0 then
+                  let  succs_n1_without_n2 = NodeSet.remove n2 (succs n2 (p,g)) in
+                  if NodeSet.cardinal succs_n1_without_n2 = 0 then
+                    find_parent (p,g) n1 n2
+                  else
+                    pick_random_element_from_set succs_n1_without_n2
+               else pick_succs n2 (p,g) in
       (n1, n2, n3)
 
     (**
