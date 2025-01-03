@@ -68,6 +68,8 @@ module type Graph =
     val to_list : graph -> ((float * float) * (float * float)) list
 
     val create_graph : (float * float) list -> graph
+
+    val steiner : graph -> int -> graph
 end
 
 module Make(O:MyNodeType) =
@@ -490,4 +492,41 @@ module Make(O:MyNodeType) =
       let pr_list = get_pr_list g in
       let pr = pick_rancom_element_from_list pr_list in
       delete_pr g pr
+
+    let steiner (p',g') n' =
+      if NodeMap.cardinal g' < 3 then
+        (p',g') (* We cannot optimize a graph that contains only 0, 1 or 2 nodes *)
+      else
+        let rec steiner_aux (p,g) n =
+          (* We print the progression *)
+          let percentage = (n' - n) * 100 / n' in
+          Printf.printf "\rProgression : %2d%%%!" percentage;
+          flush stdout;
+          (* We realize a random action *)
+          if n <= 0 then (p,g) else
+            let action = Random.int 3 in
+            let (p1,g1) = match action with
+              |0 -> action_create_pr (p,g)
+              |1 ->
+                (* action_move_pr requires g to have a relay point *)
+                if List.length (get_pr_list (p,g)) = 0 then
+                  action_create_pr (p,g)
+                else
+                  action_move_pr (p,g)
+              |_ ->
+                (* action_delete_pr requires g to have a relay point *)
+                if List.length (get_pr_list (p,g)) = 0 then
+                  action_create_pr (p,g)
+                else
+                  action_delete_pr (p,g) in
+
+            if p1 < p then
+              (* We keep the best graph *)
+              steiner_aux (p1,g1) (n-1)
+            else
+              (* We keep the current graph *)
+              steiner_aux (p,g) (n-1) in
+
+        (* We call the aux function *)
+        steiner_aux (p',g') n'
   end

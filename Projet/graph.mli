@@ -143,6 +143,13 @@ module type Graph =
       @raises, ()
     *)
     val create_graph : (float * float) list -> graph
+
+    (**
+      @requires [n] to be a positive integer and [g] to be a connected graph without cycles
+      @ensures [steiner g n] returns the calculated steiner tree of [g] after [n] iterations of the algorithm
+      @raises, ()
+    *)
+    val steiner : graph -> int -> graph
 end
 
 module MyNode : MyNodeType
