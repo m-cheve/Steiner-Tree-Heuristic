@@ -397,4 +397,14 @@ module Make(O:MyNodeType) =
       )
       succs_pr
       g1
+
+    (**
+      @requires [g] has at least one relay point
+      @ensures [action_move_pr graph] moves a relay point in [g] to a random position
+      @raises, ()
+    *)
+    let action_move_pr (p,g) =
+      let pr_list = get_pr_list (p,g) in
+      let pr = pick_rancom_element_from_list pr_list in
+      move_pr (p,g) pr
   end
