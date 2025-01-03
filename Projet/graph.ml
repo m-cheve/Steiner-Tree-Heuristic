@@ -232,7 +232,7 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [g] has at least one node
-      @ensures [pick_node graph] returns a random node from [g]
+      @ensures [pick_node g] returns a random node from [g]
       @raises, ()
     *)
     let pick_node (p,g) =
@@ -254,11 +254,11 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [n] has at least one successor
-      @ensures [pick_succs n graph] returns a random successor of [n]
+      @ensures [pick_succs n g] returns a random successor of [n]
       @raises, ()
     *)
-    let pick_succs n (p,g) =
-      let succs = succs n (p,g) in
+    let pick_succs n g =
+      let succs = succs n g in
       let _, result, _ =
         NodeSet.fold (
           fun n (is_chosen, node, number_of_nodes) ->
@@ -277,11 +277,11 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [g] has at least 3 nodes
-      @ensures [find_parent graph] returns a parent of [n1] or [n2]
+      @ensures [find_parent g] returns a parent of [n1] or [n2]
                 that is not [n1] or [n2]
       @raises, ()
     *)
-    let find_parent (p,g) n1 n2 =
+    let find_parent g n1 n2 =
       let _, result =
         fold_node (
           fun n' (is_chosen, node) ->
@@ -291,19 +291,19 @@ module Make(O:MyNodeType) =
               if n' = n1 || n' = n2 then
                 (false, node)
               else
-                let succs_n = succs n' (p,g) in
+                let succs_n = succs n' g in
                 if NodeSet.mem n1 succs_n || NodeSet.mem n2 succs_n then
                   (true, n')
                 else
                   (false, node)
         )
-        (p,g)
+        g
         (false, n1) in
       result
 
     (**
       @requires [g] has at least 3 nodes
-      @ensures [find_triangle graph] returns 3 nodes that are linked together
+      @ensures [find_triangle g] returns 3 nodes that are linked together
       @raises, ()
     *)
     let find_triangle (p,g) =
@@ -317,19 +317,19 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [g] has at least 3 nodes
-      @ensures [action_create_pr graph] creates a relay point in the middle of a triangle
+      @ensures [action_create_pr g] creates a relay point in the middle of a triangle
       @raises, ()
     *)
-    let action_create_pr (p,g) =
-      let n1, n2, n3 = find_triangle (p,g) in
-      place_pr (p,g) n1 n2 n3
+    let action_create_pr g =
+      let n1, n2, n3 = find_triangle g in
+      place_pr g n1 n2 n3
 
     (**
       @requires ()
-      @ensures [get_pr_list graph] returns the list of relay points in [g]
+      @ensures [get_pr_list g] returns the list of relay points in [g]
       @raises, ()
     *)
-    let get_pr_list (p,g) =
+    let get_pr_list g =
       fold_node (
         fun n acc ->
           if O.is_pr n then
@@ -337,7 +337,7 @@ module Make(O:MyNodeType) =
           else
             acc
       )
-      (p,g)
+      g
       []
 
     (**
@@ -353,18 +353,18 @@ module Make(O:MyNodeType) =
 
     (**
       @requires ()
-      @ensures [find_parents (p,g) n] returns the set of parents of [n] in [g]
+      @ensures [find_parents g n] returns the set of parents of [n] in [g]
       @raises, ()
     *)
-    let find_parents (p,g) n =
+    let find_parents g n =
       fold_node (
         fun n' acc ->
-          if NodeSet.mem n (succs n' (p,g)) then
+          if NodeSet.mem n (succs n' g) then
             NodeSet.add n' acc
           else
             acc
       )
-      (p,g)
+      g
       NodeSet.empty
 
 
@@ -402,13 +402,13 @@ module Make(O:MyNodeType) =
 
     (**
       @requires [g] has at least one relay point
-      @ensures [action_move_pr graph] moves a relay point in [g] to a random position
+      @ensures [action_move_pr g] moves a relay point in [g] to a random position
       @raises, ()
     *)
-    let action_move_pr (p,g) =
-      let pr_list = get_pr_list (p,g) in
+    let action_move_pr g =
+      let pr_list = get_pr_list g in
       let pr = pick_rancom_element_from_list pr_list in
-      move_pr (p,g) pr
+      move_pr g pr
 
     (**
       @requires [pr] is a relay point in [g]
