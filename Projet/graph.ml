@@ -231,8 +231,8 @@ module Make(O:MyNodeType) =
       add_edge new_pr dst2 g8
 
     (**
-      @requires [g] possède au moins un sommet
-      @ensures [pick_node graph] renvoie un sommet aléatoire du graphe
+      @requires [g] has at least one node
+      @ensures [pick_node graph] returns a random node from [g]
       @raises, ()
     *)
     let pick_node (p,g) =
@@ -253,8 +253,8 @@ module Make(O:MyNodeType) =
       result
 
     (**
-      @requires [n] possède au moins un successeur
-      @ensures [pick_succs n graph] renvoie un successeur aléatoire de [n]
+      @requires [n] has at least one successor
+      @ensures [pick_succs n graph] returns a random successor of [n]
       @raises, ()
     *)
     let pick_succs n (p,g) =
@@ -276,9 +276,9 @@ module Make(O:MyNodeType) =
       result
 
     (**
-      @requires [g] possède au moins 3 sommets
-      @ensures [find_parent graph] renvoie un sommet qui est le parent de [n1] ou [n2]
-                et qui est différent de [n1] et [n2]
+      @requires [g] has at least 3 nodes
+      @ensures [find_parent graph] returns a parent of [n1] or [n2]
+                that is not [n1] or [n2]
       @raises, ()
     *)
     let find_parent (p,g) n1 n2 =
@@ -302,8 +302,8 @@ module Make(O:MyNodeType) =
       result
 
     (**
-      @requires [g] possède au moins 3 sommets
-      @ensures [find_triangle graph] renvoie un triplet de sommets qui forment un triangle
+      @requires [g] has at least 3 nodes
+      @ensures [find_triangle graph] returns 3 nodes that are linked together
       @raises, ()
     *)
     let find_triangle (p,g) =
@@ -316,8 +316,8 @@ module Make(O:MyNodeType) =
       (n1, n2, n3)
 
     (**
-      @requires [g] possède au moins 3 sommets
-      @ensures [action_create_pr graph] crée un point relais entre 3 sommets et ajoute celui au graphe
+      @requires [g] has at least 3 nodes
+      @ensures [action_create_pr graph] creates a relay point in the middle of a triangle
       @raises, ()
     *)
     let action_create_pr (p,g) =
@@ -326,7 +326,7 @@ module Make(O:MyNodeType) =
 
     (**
       @requires ()
-      @ensures [get_pr_list graph] retourne les points relais du graphe sous forme de liste
+      @ensures [get_pr_list graph] returns the list of relay points in [g]
       @raises, ()
     *)
     let get_pr_list (p,g) =
