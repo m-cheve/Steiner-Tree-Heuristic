@@ -390,13 +390,15 @@ module Make(O:MyNodeType) =
       parents
       g in
 
-      NodeSet.fold (
+      let g2 = NodeSet.fold (
         fun succ acc ->
           let g' = remove_edge pr succ acc in
           add_edge new_pr succ g'
       )
       succs_pr
-      g1
+      g1 in
+
+      remove_node pr g2
 
     (**
       @requires [g] has at least one relay point
